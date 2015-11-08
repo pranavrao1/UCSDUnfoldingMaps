@@ -146,6 +146,17 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
+        if (lastSelected != null)
+            return;
+
+        for (Marker m : markers){
+            CommonMarker marker = (CommonMarker)m;
+            if (marker.isInside(map,  mouseX, mouseY)) {
+                lastSelected = marker;
+                marker.setSelected(true);
+                return;
+            }
+        }
 	}
 	
 	/** The event handler for mouse clicks
@@ -159,7 +170,35 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+        if(lastClicked!=null){
+            unhideMarkers();
+            lastClicked.setClicked(false);
+            lastClicked=null;
+        }else if (lastClicked==null){
+            for(Marker marker:cityMarkers){
+                if(!marker.isHidden() && marker.isInside(map, mouseX, mouseY)){
+                    lastClicked = (CommonMarker) marker;
+                    // Hide all cities
+                    for (Marker mhide : cityMarkers) {
+                        if (mhide != lastClicked) {
+                            mhide.setHidden(true);
+                        }
+                    }
+                    //
+                    for (Marker mhide : quakeMarkers) {
+                        EarthquakeMarker quakeMarker = (EarthquakeMarker)mhide;
+                        if (quakeMarker.getDistanceTo(marker.getLocation())
+                                > quakeMarker.threatCircle()) {
+                            quakeMarker.setHidden(true);
+                        }
+                    }
+                    return;
+                }
+            }
+        }
 	}
+
+
 	
 	
 	// loop over and unhide all markers
