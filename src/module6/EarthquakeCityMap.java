@@ -1,9 +1,10 @@
 package module6;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.GeoJSONReader;
@@ -44,7 +45,7 @@ public class EarthquakeCityMap extends PApplet {
 	
 
 	//feed with magnitude 2.5+ Earthquakes
-	private String earthquakesURL = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
+	private String earthquakesURL; //= "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
 	
 	// The files containing city names and info and country names and info
 	private String cityFile = "city-data.json";
@@ -85,7 +86,7 @@ public class EarthquakeCityMap extends PApplet {
 		//earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
-		//earthquakesURL = "quiz2.atom";
+		earthquakesURL = "quiz2.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -123,7 +124,7 @@ public class EarthquakeCityMap extends PApplet {
 	    //           for their geometric properties
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
-	    
+        sortAndPrint(50);
 	    
 	}  // End setup
 	
@@ -132,13 +133,17 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
-		
 	}
 	
 	
 	// TODO: Add the method:
-	//   private void sortAndPrint(int numToPrint)
-	// and then call that method from setUp
+    private void sortAndPrint(int numToPrint){
+        Object[] markers = quakeMarkers.toArray();
+        Arrays.sort(markers);
+        for(int i=0;i<numToPrint;i++){
+            System.out.println(markers[i]);
+        }
+    }
 	
 	/** Event handler that gets called automatically when the 
 	 * mouse moves.

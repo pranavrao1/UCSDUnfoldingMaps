@@ -76,7 +76,7 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
-		
+
 		// (2) Reading in earthquake data and geometric properties
 	    //     STEP 1: load country features and markers
 		List<Feature> countries = GeoJSONReader.loadData(this, countryFile);
@@ -114,8 +114,14 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(cityMarkers);
 	    
 	}  // End setup
-	
-	
+
+    @Override
+    public String sketchPath(String sketchPath1){
+        this.sketchPath = sketchPath1;
+        return sketchPath;
+    }
+
+
 	public void draw() {
 		background(0);
 		map.draw();
@@ -144,8 +150,8 @@ public class EarthquakeCityMap extends PApplet {
 	// Make sure you do not select two markers.
 	// 
 	private void selectMarkerIfHover(List<Marker> markers)
-	{
-		// TODO: Implement this method
+    {
+        // TODO: Implement this method
         if (lastSelected != null)
             return;
 
@@ -157,7 +163,7 @@ public class EarthquakeCityMap extends PApplet {
                 return;
             }
         }
-	}
+    }
 	
 	/** The event handler for mouse clicks
 	 * It will display an earthquake and its threat circle of cities

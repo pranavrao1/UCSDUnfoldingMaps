@@ -9,7 +9,6 @@ import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.data.ShapeFeature;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
-import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import de.fhpotsdam.unfolding.geo.Location;
 import parsing.ParseFeed;
@@ -26,6 +25,9 @@ public class AirportMap extends PApplet {
 	UnfoldingMap map;
 	private List<Marker> airportList;
 	List<Marker> routeList;
+
+    private CommonMarker lastSelected;
+    private CommonMarker lastClicked;
 	
 	public void setup() {
 		// setting up PAppler
@@ -72,16 +74,14 @@ public class AirportMap extends PApplet {
 			
 			SimpleLinesMarker sl = new SimpleLinesMarker(route.getLocations(), route.getProperties());
 		
-			System.out.println(sl.getProperties());
+			//System.out.println(sl.getProperties());
 			
 			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 			//routeList.add(sl);
 		}
 		
-		
-		
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
-		//map.addMarkers(routeList);
+		map.addMarkers(routeList);
 		
 		map.addMarkers(airportList);
 		
@@ -90,8 +90,81 @@ public class AirportMap extends PApplet {
 	public void draw() {
 		background(0);
 		map.draw();
-		
 	}
-	
 
+
+    @Override
+    public void mouseMoved()
+    {
+        // clear the last selection
+        if (lastSelected != null) {
+            lastSelected.setSelected(false);
+            lastSelected = null;
+
+        }
+        selectMarkerIfHover(airportList);
+    }
+
+    // If there is a marker under the cursor, and lastSelected is null
+    // set the lastSelected to be the first marker found under the cursor
+    // Make sure you do not select two markers.
+    //
+    private void selectMarkerIfHover(List<Marker> markers)
+    {
+        // TODO: Implement this method
+        if (lastSelected != null)
+            return;
+
+        for (Marker m : markers){
+            CommonMarker marker = (CommonMarker) m;
+            if (marker.isInside(map,  mouseX, mouseY)) {
+                lastSelected = marker;
+                marker.setSelected(true);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void mouseClicked()
+    {
+        if (lastClicked != null) {
+            unhideMarkers();
+            lastClicked = null;
+        }
+        else if (lastClicked == null)
+        {
+            checkAirportForClick();
+            if (lastClicked == null) {
+                checkAirportForClick();
+            }
+        }
+    }
+
+    // loop over and unhide all markers
+    private void unhideMarkers() {
+
+        for(Marker marker : routeList) {
+            marker.setHidden(true);
+        }
+    }
+
+    private void checkAirportForClick()
+    {
+        if (lastClicked != null) return;
+        // Loop over the earthquake markers to see if one of them is selected
+        for (Marker m : airportList ) {
+            AirportMarker marker = (AirportMarker)m;
+            if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
+                lastClicked = marker;
+                // Hide all the other earthquakes and hide
+                for (Marker mhide : routeList) {
+                    if (mhide != lastClicked) {
+                        mhide.setHidden(true);
+                    }
+                }
+                return;
+            }
+        }
+    }
 }

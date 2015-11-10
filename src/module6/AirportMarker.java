@@ -5,6 +5,7 @@ import java.util.List;
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /** 
@@ -32,11 +33,38 @@ public class AirportMarker extends CommonMarker {
 
 	@Override
 	public void showTitle(PGraphics pg, float x, float y) {
-		 // show rectangle with title
-		
-		// show routes
-		
-		
+        String name = getName() + " " + getCity() + " ";
+        String info = getCoutry() + " " + getCode() + " ";
+
+        pg.pushStyle();
+
+        pg.fill(255, 255, 255);
+        pg.textSize(12);
+        pg.rectMode(PConstants.CORNER);
+        pg.rect(x, y, Math.max(pg.textWidth(name), pg.textWidth(info)) + 6, 39);
+        pg.fill(0, 0, 0);
+        pg.textAlign(PConstants.LEFT, PConstants.TOP);
+        pg.text(name, x, y);
+        pg.text(info, x+6, y+18);
+
+        pg.popStyle();
 	}
-	
+
+    private String getName()
+    {
+        return getStringProperty("name");
+    }
+
+    private String getCode()
+    {
+        return getStringProperty("code");
+    }
+
+    private String getCoutry(){
+        return getStringProperty("country");
+    }
+
+    private String getCity(){
+        return getStringProperty("city");
+    }
 }
