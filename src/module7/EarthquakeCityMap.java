@@ -415,6 +415,6 @@ public class EarthquakeCityMap extends PApplet {
 	}
 
     public static void main(String[] args){
-        PApplet.main(new String[] { "EarthquakeCityMap" });
+        PApplet.main(new String[] { EarthquakeCityMap.class.getName()});
     }
 }

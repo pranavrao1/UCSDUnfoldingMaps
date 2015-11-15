@@ -1,5 +1,3 @@
 Manifest-Version: 1.0
-Class-Path: C:\Users\Pranav\Desktop\OOPStarterCode\UCSDUnfoldingMaps\U
- CSDUnfoldingMaps
-Main-Class: module7.EarthquakeCityMap
+Main-Class: generic.Main
 
